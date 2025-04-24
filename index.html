@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maria Eduarda Trudes – 15 anos</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link 
+    href="https://fonts.googleapis.com/css2?
+        family=Playfair+Display:wght@700&
+        family=Open+Sans:wght@400;600&
+        display=swap" 
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind + nosso CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="relative bg-white overflow-hidden min-h-screen flex flex-col items-center">
+
+  <!-- Texto de topo -->
+  <div class="page-title mt-12 z-10">
+    <h1 class="text-4xl font-playfair text-primary leading-tight">
+      Maria Eduarda Trudes — 15 anos
+    </h1>
+  </div>
+
+  <!-- Florais nos cantos -->
+  <div class="floral-corner top-left"></div>
+  <div class="floral-corner bottom-right"></div>
+
+  <!-- Cartão do formulário -->
+  <div class="form-card mt-8 p-8 w-full max-w-md bg-white/80 backdrop-blur-sm 
+                  border border-primary/30 rounded-2xl shadow-xl relative z-10">
+
+    <h2 class="text-2xl font-playfair text-primary text-center mb-4">
+      Envie suas lembranças
+    </h2>
+    <p class="text-center font-open text-gray-600 mb-6">
+      Obrigada por compartilhar este momento tão especial! 💙
+    </p>
+
+    <form id="upload-form" class="space-y-5">
+      <div>
+        <label for="nome" class="block text-sm font-semibold text-gray-700">
+          Seu nome
+        </label>
+        <input
+          type="text" id="nome" name="nome" required
+          placeholder="Ex: Ana Silva"
+          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-primary/50"
+        />
+      </div>
+      <div>
+        <label for="arquivos" class="block text-sm font-semibold text-gray-700">
+          Fotos ou vídeos
+        </label>
+        <input
+          type="file" id="arquivos" name="arquivos" multiple required
+          accept="image/*,video/*"
+          class="mt-1 w-full text-sm text-gray-600"
+        />
+      </div>
+      <button
+        type="submit"
+        id="btn-enviar"
+        class="btn-primary"
+      >
+        Enviar lembranças
+      </button>
+      <p id="status" class="text-center mt-3 min-h-[1.2rem]"></p>
+    </form>
+  </div>
+
+  <!-- Script de upload -->
+  <script src="upload.js"></script>
+
+  <!-- Rastro de fragmentos em tons de azul -->
+  <script>
+    document.addEventListener('mousemove', e => {
+      const d = document.createElement('div');
+      d.className = 'cursor-trail';
+      const size = 8;
+      d.style.left = (e.clientX - size/2) + 'px';
+      d.style.top  = (e.clientY - size/2) + 'px';
+      d.style.position = 'fixed';
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 600);
+    });
+  </script>
+</body>
+</html>
