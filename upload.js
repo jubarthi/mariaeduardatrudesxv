@@ -1,5 +1,5 @@
 // URL do seu Apps Script publicado como Web App
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTCiyRCieiy3c2eShQ8nZ5KWyXwQjwE34bEJN6VJuDu9WBLWIRKw55jgMUddOZD9ab/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuvc7SZTfvVdYUvwIUEjxCqb6DpUbI0yTlReieoB3i3Lf2OOmhnPIVUdvXCH6IdylH/exec';
 
 const form = document.getElementById('upload-form');
 const status = document.getElementById('status');
