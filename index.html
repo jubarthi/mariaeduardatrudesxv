@@ -8,8 +8,9 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
 
-  <!-- Tailwind + estilos internos -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     :root {
       --primary: #3955A5;
@@ -21,7 +22,7 @@
       font-family: 'Open Sans', sans-serif;
       background: #ffffff;
     }
-    .font-playfair, h1, h2 {
+    .font-playfair {
       font-family: 'Playfair Display', serif;
     }
     .text-primary {
@@ -45,7 +46,7 @@
       max-width: 24rem;
       margin: 2rem auto;
       padding: 2rem;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.85);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(57,85,165,0.3);
       border-radius: 1rem;
@@ -80,6 +81,7 @@
     }
   </style>
 </head>
+
 <body>
   <h1 class="text-4xl font-playfair text-primary text-center mt-8">
     Maria Eduarda Trudes — 15 anos
@@ -123,7 +125,7 @@
   </div>
 
   <script>
-    // Partículas seguindo o cursor
+    // Partículas no cursor
     document.addEventListener('mousemove', e => {
       const d = document.createElement('div');
       d.className = 'trail';
@@ -133,62 +135,65 @@
       setTimeout(() => d.remove(), 600);
     });
 
-    // Envio via google.script.run (sem CORS)
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuvc7SZTfvVdYUvwIUEjxCqb6DpUbI0yTlReieoB3i3Lf2OOmhnPIVUdvXCH6IdylH/exec';
+
     const form = document.getElementById('form');
     const status = document.getElementById('status');
+    const btn = form.querySelector('button');
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
       status.textContent = '';
-      const btn = form.querySelector('button');
+      status.className = '';
       btn.disabled = true;
       btn.textContent = 'Enviando…';
 
       const nome = document.getElementById('nome').value.trim();
       const files = Array.from(document.getElementById('arquivos').files);
 
-      if (!nome || !files.length) {
-        status.textContent = 'Preencha nome e selecione pelo menos 1 arquivo.';
+      if (!nome || files.length === 0) {
+        status.textContent = 'Preencha seu nome e selecione ao menos um arquivo.';
         status.className = 'error';
         btn.disabled = false;
         btn.textContent = 'Enviar lembranças';
         return;
       }
 
-      // Converte cada arquivo em base64
-      const fileObjs = await Promise.all(files.map(f => new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload = () => res({
-          name: f.name,
-          mimeType: f.type,
-          contentBase64: r.result.split(',')[1]
-        });
-        r.onerror = rej;
-        r.readAsDataURL(f);
-      })));
+      try {
+        const fileObjs = await Promise.all(files.map(file => {
+          return new Promise((res, rej) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const base64 = reader.result.split(',')[1];
+              res({ name: file.name, mimeType: file.type, contentBase64: base64 });
+            };
+            reader.onerror = rej;
+            reader.readAsDataURL(file);
+          });
+        }));
 
-      // Chama o back-end sem CORS
-      google.script.run
-        .withSuccessHandler(res => {
-          if (res.status === 'OK') {
-            status.textContent = 'Enviado com sucesso! 💙';
-            status.className = 'success';
-            form.reset();
-          } else {
-            status.textContent = 'Erro: ' + res.message;
-            status.className = 'error';
-          }
-          btn.disabled = false;
-          btn.textContent = 'Enviar lembranças';
-        })
-        .withFailureHandler(err => {
-          console.error(err);
-          status.textContent = 'Ocorreu um erro. Tente novamente.';
-          status.className = 'error';
-          btn.disabled = false;
-          btn.textContent = 'Enviar lembranças';
-        })
-        .saveFiles({ nome, files: fileObjs });
+        const resp = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, files: fileObjs }),
+        });
+
+        const result = await resp.json();
+        if (result.status === 'OK') {
+          status.textContent = 'Enviado com sucesso! 💙';
+          status.className = 'success';
+          form.reset();
+        } else {
+          throw new Error(result.message || 'Erro desconhecido');
+        }
+      } catch (err) {
+        console.error(err);
+        status.textContent = 'Erro ao enviar. Tente novamente.';
+        status.className = 'error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Enviar lembranças';
+      }
     });
   </script>
 </body>
