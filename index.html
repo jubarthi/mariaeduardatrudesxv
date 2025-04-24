@@ -1,97 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8"  />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Maria Eduarda Trudes – 15 anos</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Maria Eduarda Trudes — 15 anos</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link 
-    href="https://fonts.googleapis.com/css2?
-        family=Playfair+Display:wght@700&
-        family=Open+Sans:wght@400;600&
-        display=swap" 
-    rel="stylesheet"
-  />
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind + nosso CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body class="relative bg-white overflow-hidden min-h-screen flex flex-col items-center">
+    <style>
+      /* Cole aqui todo o conteúdo de style.css */
+      :root {
+        --primary-blue: #3955A5;
+        --primary-blue-hover: #2F447E;
+      }
+      body, html {
+        margin: 0; padding: 0; font-family: 'Open Sans', sans-serif;
+      }
+      .font-playfair, h1, h2 {
+        font-family: 'Playfair Display', serif;
+      }
+      .text-primary { color: var(--primary-blue); }
+      .btn-primary {
+        width:100%; padding:.75rem 0; background:var(--primary-blue);
+        color:white; font-weight:600; border-radius:.5rem;
+        cursor:pointer; border:none; transition:.3s;
+      }
+      .btn-primary:hover { background: var(--primary-blue-hover); }
+      .form-card {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(57,85,165,0.3);
+        border-radius: 1rem;
+        padding:2rem;
+        max-width:24rem;
+        margin:2rem auto;
+      }
+      .cursor-trail {
+        width:8px; height:8px; border-radius:50%;
+        background:radial-gradient(circle,rgba(130,180,240,0.8),rgba(70,130,180,0.4));
+        position:fixed; pointer-events:none; z-index:9999;
+        animation: fadeTrail 0.6s forwards;
+      }
+      @keyframes fadeTrail {
+        to { transform:scale(2); opacity:0 }
+      }
+      #status { min-height:1em; margin-top:.5rem; font-size:.9rem }
+      #status.success { color: #16a34a }
+      #status.error   { color: #dc2626 }
+    </style>
+  </head>
+  <body class="relative bg-white">
 
-  <!-- Texto de topo -->
-  <div class="page-title mt-12 z-10">
-    <h1 class="text-4xl font-playfair text-primary leading-tight">
+    <h1 class="text-4xl font-playfair text-primary text-center mt-8">
       Maria Eduarda Trudes — 15 anos
     </h1>
-  </div>
 
-  <!-- Florais nos cantos -->
-  <div class="floral-corner top-left"></div>
-  <div class="floral-corner bottom-right"></div>
+    <div class="form-card">
+      <h2 class="text-2xl font-playfair text-primary text-center mb-2">
+        Envie suas lembranças
+      </h2>
+      <p class="text-center text-gray-600 mb-6">
+        Obrigada por compartilhar este momento tão especial! 💙
+      </p>
 
-  <!-- Cartão do formulário -->
-  <div class="form-card mt-8 p-8 w-full max-w-md bg-white/80 backdrop-blur-sm 
-                  border border-primary/30 rounded-2xl shadow-xl relative z-10">
+      <form id="upload-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Seu nome</label>
+          <input id="nome" type="text" required placeholder="Ex: Ana Silva"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue/50" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Fotos ou vídeos</label>
+          <input id="arquivos" type="file" multiple required accept="image/*,video/*"
+            class="w-full text-sm text-gray-600" />
+        </div>
+        <button type="submit" class="btn-primary">Enviar lembranças</button>
+        <p id="status"></p>
+      </form>
+    </div>
 
-    <h2 class="text-2xl font-playfair text-primary text-center mb-4">
-      Envie suas lembranças
-    </h2>
-    <p class="text-center font-open text-gray-600 mb-6">
-      Obrigada por compartilhar este momento tão especial! 💙
-    </p>
+    <script>
+      // Rastro de partículas
+      document.addEventListener('mousemove', e => {
+        const d = document.createElement('div');
+        d.className = 'cursor-trail';
+        const s = 8;
+        d.style.left = (e.clientX - s/2) + 'px';
+        d.style.top  = (e.clientY - s/2) + 'px';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 600);
+      });
 
-    <form id="upload-form" class="space-y-5">
-      <div>
-        <label for="nome" class="block text-sm font-semibold text-gray-700">
-          Seu nome
-        </label>
-        <input
-          type="text" id="nome" name="nome" required
-          placeholder="Ex: Ana Silva"
-          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg 
-                 focus:outline-none focus:ring-2 focus:ring-primary/50"
-        />
-      </div>
-      <div>
-        <label for="arquivos" class="block text-sm font-semibold text-gray-700">
-          Fotos ou vídeos
-        </label>
-        <input
-          type="file" id="arquivos" name="arquivos" multiple required
-          accept="image/*,video/*"
-          class="mt-1 w-full text-sm text-gray-600"
-        />
-      </div>
-      <button
-        type="submit"
-        id="btn-enviar"
-        class="btn-primary"
-      >
-        Enviar lembranças
-      </button>
-      <p id="status" class="text-center mt-3 min-h-[1.2rem]"></p>
-    </form>
-  </div>
+      // Lógica de upload para o mesmo domínio
+      const form = document.getElementById('upload-form');
+      const status = document.getElementById('status');
 
-  <!-- Script de upload -->
-  <script src="upload.js"></script>
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        status.textContent = '';
+        const btn = form.querySelector('button');
+        btn.disabled = true; btn.textContent = 'Enviando…';
 
-  <!-- Rastro de fragmentos em tons de azul -->
-  <script>
-    document.addEventListener('mousemove', e => {
-      const d = document.createElement('div');
-      d.className = 'cursor-trail';
-      const size = 8;
-      d.style.left = (e.clientX - size/2) + 'px';
-      d.style.top  = (e.clientY - size/2) + 'px';
-      d.style.position = 'fixed';
-      document.body.appendChild(d);
-      setTimeout(() => d.remove(), 600);
-    });
-  </script>
-</body>
+        const nome = document.getElementById('nome').value.trim();
+        const files = Array.from(document.getElementById('arquivos').files);
+        if (!nome || files.length === 0) {
+          status.textContent = 'Preencha nome e escolha pelo menos um arquivo.';
+          status.className = 'error';
+          btn.disabled = false; btn.textContent = 'Enviar lembranças';
+          return;
+        }
+
+        try {
+          const fileObjs = await Promise.all(files.map(file => new Promise((res, rej) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              res({
+                name: file.name,
+                mimeType: file.type,
+                contentBase64: reader.result.split(',')[1]
+              });
+            };
+            reader.onerror = rej;
+            reader.readAsDataURL(file);
+          })));
+
+          const resp = await fetch('', { 
+            method:'POST',
+            headers:{ 'Content-Type':'application/json' },
+            body: JSON.stringify({ nome, files: fileObjs })
+          });
+
+          const json = await resp.json();
+          if (json.status==='OK') {
+            status.textContent = 'Enviado com sucesso! 💙';
+            status.className = 'success';
+            form.reset();
+          } else {
+            throw new Error(json.message||'Erro');
+          }
+        } catch (err) {
+          console.error(err);
+          status.textContent = 'Ocorreu um erro. Tente de novo.';
+          status.className = 'error';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Enviar lembranças';
+        }
+      });
+    </script>
+  </body>
 </html>
